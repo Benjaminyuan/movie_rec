@@ -1,6 +1,7 @@
 import java.io.IOException;
 
 import hbase.HBaseDemo;
+import hdfs.RatingsProcess;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.*;
 import org.apache.hadoop.hbase.client.*;
@@ -11,13 +12,13 @@ public class Main{
 //        System.out.println("hello world");
 //        FileRead fr = new FileRead();
 //        fr.fileOperate();
-//        RatingsProcess rp = new RatingsProcess();
-//        rp.mapUserRating();
+        RatingsProcess rp = new RatingsProcess();
+        rp.mapUserRating();
 
         // instantiate Configuration class
-
-        HBaseDemo hBaseDemo = new HBaseDemo();
-        hBaseDemo.testConnection();
+//
+//        HBaseDemo hBaseDemo = new HBaseDemo();
+//        hBaseDemo.testConnection();
 
         // close HTable instance
     }

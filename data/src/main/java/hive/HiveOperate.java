@@ -1,7 +1,6 @@
 package hive;
 
-import dto.MovieInfo;
-import hive.HiveConnector;
+import dto.Info;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -10,7 +9,7 @@ import java.util.List;
 
 public class HiveOperate {
     private  static Logger logger = Logger.getLogger(HiveOperate.class);
-    public  static void insertUserMovies(List<MovieInfo> infoList, long userId, String tableName){
+    public  static void insertUserMovies(List<Info> infoList, long userId, String tableName){
         try{
             Connection connection = HiveConnector.getConnection();
             // insert into table values(

@@ -1,6 +1,6 @@
 package hdfs;
 
-import dto.MovieInfo;
+import dto.Info;
 import mappers.RatingsMapper;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -32,13 +32,14 @@ public class RatingsProcess {
             job.setReducerClass(RatingsReducer.class);
 
             job.setMapOutputKeyClass(LongWritable.class);
-            job.setMapOutputValueClass(MovieInfo.class);
+            job.setMapOutputValueClass(Info.class);
 
             job.setOutputKeyClass(LongWritable.class);
-            job.setOutputValueClass(Text.class);
+            job.setOutputValueClass(Info.class);
             job.setOutputFormatClass(TextOutputFormat.class);
+
             //指定未存在的
-            FileInputFormat.addInputPath(job,new Path("hdfs://localhost:9000/input/ratings-small.csv"));
+            FileInputFormat.addInputPath(job,new Path("hdfs://localhost:9000/input/data/genome-scores.csv"));
             FileOutputFormat.setOutputPath(job,new Path("hdfs://localhost:9000/output"));
            System.exit( job.waitForCompletion(true) ? 0 : 1);
 

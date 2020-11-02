@@ -1,35 +1,39 @@
 package reducers;
 
-import dto.MovieInfo;
-import hive.HiveConnector;
-import hive.HiveOperate;
-import org.apache.hadoop.hbase.util.Pair;
+import dto.Info;
 import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.NullWritable;
-import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
-import service.DataProcess;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RatingsReducer extends Reducer<LongWritable, MovieInfo, LongWritable, Text> {
+public class RatingsReducer extends Reducer<LongWritable, Info, LongWritable, Info> {
     @Override
-    protected void reduce(LongWritable key, Iterable<MovieInfo> values, Context context) throws IOException, InterruptedException {
-        List<MovieInfo> list = new ArrayList<MovieInfo>();
-        values.forEach(list::add);
-        list.sort((m1, m2) -> {
-            float r = m1.getRating() - m2.getRating();
-            if (r < 0.1) {
-                return 0;
+    protected void reduce(LongWritable key, Iterable<Info> values, Context context) throws IOException, InterruptedException {
+        // 电影的tag列表
+        List<Info> tagList = new ArrayList<Info>();
+        // 电影的打分列表
+        List<Info> ratingList = new ArrayList<>();
+        values.forEach(info -> {
+            if(info.isRatingData()){
+                ratingList.add(info);
+            }else{
+                tagList.add(info);
             }
-            return r > 0 ? 1 : -1;
         });
-        Pair<List<MovieInfo>,List<MovieInfo>> splitUserRatingRawData = DataProcess.splitUserRatingRawData(list);
-        HiveOperate.insertUserMovies(splitUserRatingRawData.getFirst(),key.get(),"user_movies");
-        HiveOperate.insertUserMovies(splitUserRatingRawData.getFirst(),key.get(),"user_movies_test");
-        context.write(key, new Text(list.toString()));
+        ratingList.forEach(info -> {
+            tagList.forEach(tagInfo ->{
+                // 记录用户的打分和打分电影对应的tag
+                tagInfo.setRating(info.getRating());
+                tagInfo.setUserId(info.getUserId());
+                try {
+                    System.out.println("reduce -- " + tagInfo);
+                    context.write(new LongWritable(info.getUserId()),tagInfo);
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+        });
     }
 }
