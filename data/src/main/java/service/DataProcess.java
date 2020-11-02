@@ -13,7 +13,7 @@ public class DataProcess {
         List<MovieInfo> testList = new ArrayList<>(cap);
         List<MovieInfo> trainList = new ArrayList<>(cap);
         int len = list.size() % 2 == 0 ? list.size() : list.size() - 1;
-        //数据集拆分，正态分布对半分
+        //数据集拆分，对半分,后续需要根据正太分布拆分。
         for (int i = 0; i < len; ) {
             testList.add(list.get(i++));
 
