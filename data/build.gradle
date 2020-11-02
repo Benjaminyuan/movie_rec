@@ -1,0 +1,14 @@
+plugins {
+   id 'application'
+}
+version '1.0-SNAPSHOT'
+application {
+    mainClassName = 'Main'
+}
+configurations {
+    driver
+}
+dependencies {
+    compile group: 'org.apache.hadoop', name: 'hadoop-client', version: '3.3.0'
+    compile group: 'org.apache.hive', name: 'hive-jdbc', version: '3.1.2'
+}
