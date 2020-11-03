@@ -1,19 +1,16 @@
 package hdfs;
 
+import MapReducers.RatingsMP;
 import dto.Info;
-import mappers.RatingsMapper;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
 import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
-import reducers.RatingsReducer;
 
 import java.io.IOException;
 
@@ -22,14 +19,16 @@ public class RatingsProcess {
     public void mapUserRating() throws IOException, ClassNotFoundException, InterruptedException {
         try{
             Configuration conf = new Configuration();
+            conf.addResource("../../../conf/core-site.xml");
             conf.set("fs.default.name","hdfs://localhost:9000");
-            FileSystem fs = FileSystem.get(conf);
-            fs.delete(new Path("/output"));
+            Path outputPath = new Path("/output");
+            outputPath.getFileSystem(conf).delete(outputPath, true);
             Job job = Job.getInstance(conf,"rating");
             job.setInputFormatClass(TextInputFormat.class);
 
-            job.setMapperClass(RatingsMapper.class);
-            job.setReducerClass(RatingsReducer.class);
+            job.setJarByClass(RatingsMP.class);
+            job.setMapperClass(RatingsMP.RatingsMapper.class);
+            job.setReducerClass(RatingsMP.RatingsReducer.class);
 
             job.setMapOutputKeyClass(LongWritable.class);
             job.setMapOutputValueClass(Info.class);

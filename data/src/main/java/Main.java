@@ -8,6 +8,7 @@ import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
 
 public class Main{
+
     public static void main(String[] args) throws Exception{
 //        System.out.println("hello world");
 //        FileRead fr = new FileRead();

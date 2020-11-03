@@ -69,7 +69,7 @@ public class Info implements WritableComparable<Info> {
             return String.format("%d:%d:%f:%d", userId, movieId, rating, timestamp);
         } else {
             // movieId,tagId,relevance
-            return String.format("%d:%d:%d", movieId, tagId, relevance);
+            return String.format("%d:%d:%f", movieId, tagId, relevance);
 
         }
     }
