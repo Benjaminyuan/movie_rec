@@ -16,7 +16,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class TagProcess {
 
     public Vector<Tag> tags = new Vector<>();
-    int[] fa = new int[2000];
     public HashMap<Integer, Integer> tagIdMap = new HashMap<>(); // 保存tagId的值
     Vector<Vector<Integer>> G = new Vector<Vector<Integer>>(); // 保存在tags中的编号
     Vector<Vector<Integer>> clusters = new Vector<>(); // 保存在tags中的编号
@@ -59,53 +58,34 @@ public class TagProcess {
         return dis[s.length()][t.length()] * 9 / Integer.min(s.length(), t.length()) ;/// Integer.min(s.length(), t.length());
     }
 
-    public int lookup(int x){
-        if(fa[x] == x)
-            return x;
-        return fa[x] = lookup(fa[x]);
+    public void connect(int a, int b){
+        if(tagIdMap.containsKey(a)) {
+            int clusterId = tagIdMap.get(a);
+            tagIdMap.put(b, clusterId);
+            clusters.get(clusterId).add(b);
+            return;
+        }
+        tagIdMap.put(a, clusters.size());
+        tagIdMap.put(b, clusters.size());
+        Vector<Integer> v = new Vector<>();
+        v.add(a);
+        v.add(b);
+        clusters.add(v);
     }
 
-    public void graphWalk(){
-        for(int i = 0; i < tags.size(); i++)
-            fa[i] = i;
-        for(int i = 0; i < tags.size(); i++){
-            Vector<Integer> neighbors = G.get(i);
-            for(int j : neighbors){
-                if(lookup(i) != lookup(j)){
-                    fa[lookup(i)] = lookup(j);
-                }
-            }
-        }
-        HashMap<Integer, Integer> orderMap = new HashMap<>();
-        int clusterCnt = 0;
-        for(int i = 0; i< tags.size(); i++){
-            // 记录映射关系
-            int root = lookup(i);
-            if(orderMap.containsKey(root))
-                tagIdMap.put(tags.get(i).tagId, orderMap.get(root));
-            else{
-                orderMap.put(root, clusterCnt);
-                clusterCnt += 1;
-            }
-        }
-        for(int i = 0; i< clusterCnt; i++) {
-            Vector<Integer> v = new Vector<Integer>();
-            clusters.add(v);
-        }
-        for(int i = 0; i< tags.size(); i++)
-            clusters.get(orderMap.get(lookup(i))).add(i);
-    }
 
     public void output() {
         AtomicInteger cnt = new AtomicInteger();
+        AtomicInteger total = new AtomicInteger();
         clusters.forEach(c -> {
+            cnt.addAndGet(1);
             System.out.printf("*********************** %d ***********************\n", cnt.get());
             for (Integer index : c) {
                 System.out.println(tags.get(index).toString());
-                cnt.addAndGet(1);
+                total.addAndGet(1);
             }
         });
-        System.out.printf("总共%d个cluster\n", clusters.size());
+        System.out.printf("总共%d(%d)个cluster, %d个tag\n", clusters.size(), cnt.get(), total.get());
     }
 
 
@@ -145,13 +125,10 @@ public class TagProcess {
             for (int j = 0; j < i; j++) {
                 int dis = getDistance(tags.get(i).truncatedName, tags.get(j).truncatedName);
                 if (dis <= 2) {
-                    G.get(i).add(j);
-                    G.get(j).add(i);
+                    connect(j, i);
                 }
             }
         }
-
-        graphWalk();
         output();
 //        FSDataOutputStream outStream = fs.create(new Path("hdfs:/mydir/wordcount.txt"));
 //        outStream.write("ttt  tta  a afsdf dasf ".getBytes());
