@@ -29,10 +29,10 @@ public class Tag {
     }
 
 
-    public int compareTo(Tag o) {
-        if(originalName.equals(o.originalName))
-            return 0;
-        return originalName.compareTo(o.originalName);
+    public int compareTo(Tag other) {
+        if(truncatedName.toString().length() == other.truncatedName.toString().length())
+            return truncatedName.toString().compareTo(other.truncatedName.toString());
+        return truncatedName.toString().length() < other.truncatedName.toString().length() ? 1 : 0;
     }
 
     public String toString(){

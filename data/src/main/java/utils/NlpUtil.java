@@ -7,6 +7,7 @@ import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.util.CoreMap;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 
@@ -30,7 +31,7 @@ public class NlpUtil {
                 // 过滤各种助词
                 String[] filters = new String[]{"in", "the", "on", "a", "an", "of", "to", "too",
                         "as", "very", "so", "off", "for", "in", "with", "from", ":", "movie",
-                        "film", "&"};
+                        "film", "&", "is", "than", "but", "base", "adapt", "make", "as hell", "south", "world"};
                 boolean miss = false;
                 for(String w : filters){
                     if(w.equals(lema)){
