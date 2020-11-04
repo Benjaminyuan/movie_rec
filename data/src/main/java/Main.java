@@ -1,11 +1,8 @@
-import java.io.IOException;
+import java.util.List;
 
-import hbase.HBaseDemo;
-import hdfs.RatingsProcess;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.*;
-import org.apache.hadoop.hbase.client.*;
-import org.apache.hadoop.hbase.util.Bytes;
+import hdfs.TagProcess;
+import utils.NlpUtil;
+
 
 public class Main{
 
@@ -13,8 +10,8 @@ public class Main{
 //        System.out.println("hello world");
 //        FileRead fr = new FileRead();
 //        fr.fileOperate();
-        RatingsProcess rp = new RatingsProcess();
-        rp.mapUserRating();
+//        RatingsProcess rp = new RatingsProcess();
+//        rp.mapUserRating();
 
         // instantiate Configuration class
 //
@@ -22,5 +19,9 @@ public class Main{
 //        hBaseDemo.testConnection();
 
         // close HTable instance
+        List<String> l = NlpUtil.getLema("these kids are playing");
+        System.out.println(l.toString());
+        TagProcess tp = new TagProcess();
+        tp.process();
     }
 }

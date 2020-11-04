@@ -12,5 +12,6 @@ dependencies {
     compile group: 'org.apache.hadoop', name: 'hadoop-client', version: '3.3.0'
     compile group: 'org.apache.hive', name: 'hive-jdbc', version: '3.1.2'
     compile group: 'org.apache.hbase', name: 'hbase-client', version: '2.3.2'
-
+    compile group: 'edu.stanford.nlp', name: 'stanford-corenlp', version:'4.0.0'
+    compile group: 'edu.stanford.nlp', name: 'stanford-corenlp', version:'4.0.0', classifier: 'models'
 }
