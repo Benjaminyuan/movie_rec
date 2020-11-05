@@ -77,15 +77,37 @@ public class TagProcess {
     public void output() {
         AtomicInteger cnt = new AtomicInteger();
         AtomicInteger total = new AtomicInteger();
-        clusters.forEach(c -> {
+        HashSet<Integer>[] tagIdToClusters = new HashSet[tags.size() + 5];
+        for(int i = 0; i <  tagIdToClusters.length; i++)
+            tagIdToClusters[i] = new HashSet<>();
+        for(int i = clusters.size()-1; i >= 0; i--){
             cnt.addAndGet(1);
-            System.out.printf("*********************** %d ***********************\n", cnt.get());
-            for (Integer index : c) {
-                System.out.println(tags.get(index).toString());
+            // System.out.printf("*********************** %d ***********************\n", cnt.get());
+            for (Integer index : clusters.get(i)) {
+                Tag t = tags.get(index);
+                tagIdToClusters[t.tagId].add(i);
+                // System.out.println(tags.get(index).toString());
                 total.addAndGet(1);
             }
-        });
+        };
+        for(int i = 0; i < tags.size(); i++){
+            Tag t = tags.get(i);
+            if(tagIdToClusters[t.tagId].isEmpty()){
+                Vector<Integer> v = new Vector<>();
+                v.add(i);
+                clusters.add(v);
+                tagIdToClusters[t.tagId].add(clusters.size()-1);
+            }
+        }
         System.out.printf("总共%d(%d)个cluster, %d个tag\n", clusters.size(), cnt.get(), total.get());
+        for(int i = 0; i < tags.size(); i++){
+            Tag t = tags.get(i);
+            System.out.printf("%d ", t.tagId);
+            for(int c : tagIdToClusters[t.tagId]){
+                System.out.printf("%d ", c);
+            }
+            System.out.println();
+        }
     }
 
 
