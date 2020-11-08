@@ -27,8 +27,7 @@ public class RatingsMapper extends Mapper<LongWritable, Text, LongWritable, Info
         LongWritable movieId = null;
         // 长度判断防止越界
         Configuration conf = context.getConfiguration();
-        String fileName = conf.get("fileName");
-        if (name.contains(fileName) && line.length >= 4) {
+        if (name.contains("ratings") && line.length >= 4) {
             // userId,movieId,rating,timestamp
             movieId = new LongWritable(Long.parseLong(line[1]));
             info = builder.isRatingData(true)

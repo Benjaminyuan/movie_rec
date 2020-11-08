@@ -58,13 +58,12 @@ public class RatingsProcess {
 
     }
 
-    public void chainProcess(String fileName) {
+    public void chainProcess() {
         try {
             String out1 = "hdfs://localhost:9000/output/job1";
             String out2 = "hdfs://localhost:9000/output/job2";
             Configuration conf = new Configuration();
             conf.set("fs.default.name", "hdfs://localhost:9000");
-            conf.set("fileName", fileName);
             FileSystem fs = FileSystem.get(conf);
             fs.delete(new Path("/output"));
             Job job1 = Job.getInstance(conf, "rating");
@@ -82,8 +81,7 @@ public class RatingsProcess {
 //            job.setOutputFormatClass(TextOutputFormat.class);
 
             //指定未存在的
-            FileInputFormat.addInputPath(job1, new Path("hdfs://localhost:9000/input/normal/split/" + fileName));
-            FileInputFormat.addInputPath(job1, new Path("hdfs://localhost:9000/input/normal/genome-scores.csv"));
+            FileInputFormat.addInputPath(job1, new Path("hdfs://localhost:9000/input/small/"));
             FileOutputFormat.setOutputPath(job1, new Path(out1));
             job1.waitForCompletion(true);
             System.out.println("job1 finished -----");

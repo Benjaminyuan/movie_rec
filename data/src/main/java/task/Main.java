@@ -16,7 +16,6 @@ public class Main{
         TagProcess tagProcess = new TagProcess();
         tagProcess.loadTagToHBase();
         RatingsProcess rp = new RatingsProcess();
-        String template = "ratings-%d.csv";
-        rp.chainProcess(String.format(template,0));
+        rp.chainProcess();
     }
 }
